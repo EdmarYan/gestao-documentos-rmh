@@ -66,7 +66,7 @@ async function carregarDocumentos() {
                     <small class="text-muted">${doc.descricao || 'Sem descrição informada'}</small>
                 </td>
                 <td>
-                    <span class="badge bg-secondary badge-categoria">${doc.categoria}</span>
+                    <span class="badge bg-primary badge-categoria">${doc.categoria || 'Geral'}</span>
                 </td>
                 <td class="text-muted small">
                     ${doc.dataCriacao ? new Date(doc.dataCriacao).toLocaleDateString('pt-BR') : '-'}
@@ -164,10 +164,10 @@ async function atualizarListaComentarios(documentoId) {
         listaBox.innerHTML = comentarios.map(c => `
             <div class="p-2 rounded card-comentario">
                 <div class="d-flex justify-content-between">
-                    <span class="fw-semibold text-primary-rmh small">${c.autor}</span>
+                    <span class="fw-semibold text-primary-rmh small">${c.autor || 'Parecer Jurídico'}</span>
                     <small class="text-muted">${c.dataCriacao ? new Date(c.dataCriacao).toLocaleDateString('pt-BR') : ''}</small>
                 </div>
-                <div class="small text-dark mt-1">${c.texto}</div>
+                <div class="small text-dark mt-1">${c.comentario || c.texto || ''}</div>
             </div>
         `).join('');
 

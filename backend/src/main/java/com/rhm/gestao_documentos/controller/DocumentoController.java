@@ -81,12 +81,21 @@ public class DocumentoController {
     }
 
     /**
-     * Adiciona um novo comentário a um documento específico.
+     * Adiciona um novo comentário a um documento específico (aceita JSON com texto e autor).
      */
     @PostMapping("/{id}/comentarios")
     public ResponseEntity<Comentario> adicionarComentario(
             @PathVariable("id") Long id,
-            @RequestParam("comentario") String texto) {
+            @RequestBody(required = false) java.util.Map<String, String> body,
+            @RequestParam(value = "comentario", required = false) String textoParam) {
+
+        String texto = (body != null && body.containsKey("texto")) ? body.get("texto") 
+                     : (body != null && body.containsKey("comentario")) ? body.get("comentario") 
+                     : textoParam;
+
+        if (texto == null || texto.isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
 
         Comentario comentario = documentoService.adicionarComentario(id, texto);
         return ResponseEntity.status(HttpStatus.CREATED).body(comentario);
