@@ -1,0 +1,35 @@
+/* Paleta Institucional RMH Advocacia */
+:root {
+    --rmh-primary: #1e3a8a;       /* Azul marinho nobre */
+    --rmh-primary-hover: #172554; /* Azul marinho escuro */
+    --rmh-accent: #f59e0b;        /* Detalhe dourado/âmbar */
+}
+
+/* Navbar e Botões Temáticos */
+.bg-rmh {
+    background-color: var(--rmh-primary) !important;
+}
+
+.bg-rmh:hover {
+    background-color: var(--rmh-primary-hover) !important;
+}
+
+.text-primary-rmh {
+    color: var(--rmh-primary) !important;
+}
+
+/* Tabela e Badges */
+.table > :not(caption) > * > * {
+    padding: 0.85rem 1rem;
+}
+
+.badge-categoria {
+    font-size: 0.8rem;
+    padding: 0.35em 0.65em;
+}
+
+/* Card de Comentários no Histórico */
+.card-comentario {
+    border-left: 4px solid var(--rmh-primary);
+    background-color: #f8fafc;
+}

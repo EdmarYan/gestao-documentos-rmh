@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RMH Advocacia - Gestão de Documentos</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Estilo Customizado Separado -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-light">
+
+<!-- Barra de Navegação -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-rmh shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="#">
+            <i class="bi bi-briefcase-fill text-warning"></i>
+            RMH Advocacia
+        </a>
+        <span class="navbar-text text-white-50">
+                Sistema de Gestão Documental & Pareceres
+            </span>
+    </div>
+</nav>
+
+<!-- Conteúdo Principal -->
+<main class="container my-4">
+
+    <!-- Alerta de Notificações Feedback -->
+    <div id="alertFeedback" class="alert d-none shadow-sm" role="alert"></div>
+
+    <!-- Seção 1: Formulário de Upload -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-bottom py-3">
+            <h5 class="card-title mb-0 text-primary-rmh fw-bold">
+                <i class="bi bi-cloud-arrow-up-fill me-2"></i>Novo Documento
+            </h5>
+        </div>
+        <div class="card-body">
+            <form id="formUpload" enctype="multipart/form-data">
+                <div class="row g-3">
+                    <div class="col-md-5">
+                        <label for="titulo" class="form-label fw-semibold">Título do Documento *</label>
+                        <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Ex: Contrato Social de Prestação" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="categoria" class="form-label fw-semibold">Categoria *</label>
+                        <select class="form-select" id="categoria" name="categoria" required>
+                            <option value="" selected disabled>Selecione...</option>
+                            <option value="Contrato">Contrato</option>
+                            <option value="Petição">Petição</option>
+                            <option value="Procuração">Procuração</option>
+                            <option value="Parecer">Parecer</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="file" class="form-label fw-semibold">Arquivo (PDF, PNG, JPG) *</label>
+                        <input class="form-control" type="file" id="file" name="file" accept=".pdf,.png,.jpg,.jpeg" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="descricao" class="form-label fw-semibold">Descrição / Observações</label>
+                        <textarea class="form-control" id="descricao" name="descricao" rows="2" placeholder="Resumo do teor jurídico ou partes envolvidas..."></textarea>
+                    </div>
+                    <div class="col-12 text-end">
+                        <button type="submit" id="btnSalvar" class="btn btn-primary bg-rmh border-0 px-4">
+                            <i class="bi bi-check-circle me-1"></i> Anexar Documento
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Seção 2: Tabela de Documentos Cadastrados -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0 text-primary-rmh fw-bold">
+                <i class="bi bi-folder-fill me-2"></i>Acervo de Documentos
+            </h5>
+            <button class="btn btn-sm btn-outline-secondary" onclick="carregarDocumentos()">
+                <i class="bi bi-arrow-clockwise me-1"></i> Atualizar
+            </button>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th scope="col" class="ps-4">ID</th>
+                        <th scope="col">Título</th>
+                        <th scope="col">Categoria</th>
+                        <th scope="col">Data de Criação</th>
+                        <th scope="col" class="text-center">Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tabelaDocumentosCorpo">
+                    <!-- Inserido dinamicamente via app.js -->
+                    <tr>
+                        <td colspan="5" class="text-center py-4 text-muted">
+                            <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                            Carregando documentos...
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<!-- Modal de Comentários / Pareceres -->
+<div class="modal fade" id="modalComentarios" tabindex="-1" aria-labelledby="modalComentariosLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-rmh text-white">
+                <h5 class="modal-title" id="modalComentariosLabel">
+                    <i class="bi bi-chat-left-text-fill me-2"></i>Comentários do Documento
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+
+                <!-- Resumo do Documento Ativo -->
+                <div class="p-3 mb-3 bg-light rounded border">
+                    <h6 class="fw-bold mb-1" id="comentarioDocTitulo">-</h6>
+                    <small class="text-muted" id="comentarioDocDescricao">-</small>
+                </div>
+
+                <!-- Lista de Comentários Anteriores -->
+                <h6 class="fw-bold text-secondary mb-2">Histórico de Discussões:</h6>
+                <div id="listaComentarios" class="d-flex flex-column gap-2 mb-3" style="max-height: 250px; overflow-y: auto;">
+                    <!-- Comentários injetados aqui -->
+                </div>
+
+                <!-- Formulário para Inserir Novo Comentário -->
+                <form id="formComentario" class="border-top pt-3">
+                    <input type="hidden" id="comentarioDocId">
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" id="autorComentario" placeholder="Seu nome / Cargo" required>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="textoComentario" placeholder="Adicionar parecer ou comentário..." required>
+                                <button class="btn btn-primary bg-rmh border-0" type="submit">
+                                    <i class="bi bi-send-fill"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap 5 JS Bundle (com Popper para Modals) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Lógica JavaScript Separada -->
+<script src="app.js"></script>
+</body>
+</html>
