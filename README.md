@@ -35,8 +35,8 @@ O banco de dados relacional foi estruturado em duas tabelas principais ligadas p
 DOCUMENTOS (1) <---> (N) COMENTARIOS
 ```
 
-- **documentos**: `id` (PK), `titulo`, `descricao`, `categoria`, `nome_arquivo`, `caminho_arquivo`, `data_criacao`
-- **comentarios**: `id` (PK), `documento_id` (FK), `autor`, `texto`, `data_criacao`
+- **documentos**: `id` (PK), `titulo`, `descricao`, `caminho_arquivo`, `data_criacao`
+- **comentarios**: `id` (PK), `documento_id` (FK), `comentario`, `data_criacao`
 
 ---
 
@@ -49,7 +49,7 @@ DOCUMENTOS (1) <---> (N) COMENTARIOS
 ### 2. Inicializar o Banco de Dados PostgreSQL
 Caso utilize Docker:
 ```bash
-docker run --name postgres-rmh -e POSTGRES_DB=gestao_documentos -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
+docker run --name postgres-rmh -e POSTGRES_DB=gestao_documentos -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 127.0.0.1:5432:5432 -d postgres
 ```
 
 O script inicial DDL está disponível em `database/schema.sql`.
